@@ -8,7 +8,6 @@ const path = require("path");
 const cors = require('cors');
 
 const User = require("./models/userDetailsModel")
-
 const mongoose = require('mongoose');
 /* mongoose – Connects your app to a MongoDB database */
 const fs = require("fs");
