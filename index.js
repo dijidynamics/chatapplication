@@ -78,6 +78,9 @@ app.get("/api/openai/test", async (req, res) => {
 app.post("/api/openai/generate-data", async (req, res) => {
   try {
     const { chatbotcontent } = req.body;
+    if (!chatbotcontent) {
+      return res.status(400).json({ error: "chatbotcontent is required" });
+    }
     const OpenAI = require("openai");
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -99,16 +102,25 @@ Return as a JSON object with keys: heading, tags (array), and faqs.
        // 🧠 Log the full model output for debugging
     console.log("🔹 Raw OpenAI response:", response.output_text);
 
-    let outputText = response.output[0].content[0].text;
-    // Clean any code block formatting
-    outputText = outputText.replace(/```json|```/g, "").trim();
+   // let outputText = response.output[0].content[0].text;
+    //outputText = outputText.replace(/```json|```/g, "").trim();
 
-    const data = JSON.parse(outputText);
-    res.json({
-      heading: data.heading,
-      tags: data.tags || [],  // ✅ always array
-      faqs: data.faqs || [],
-    });
+
+    // ✅ Use response.output_text directly
+  // ✅ Use simpler output for OpenAI v4
+let outputText = response.output_text.trim();
+outputText = outputText.replace(/```json|```/g, "").trim();
+
+const data = JSON.parse(outputText);
+
+res.json({
+  heading: data.heading || "Untitled Chatbot",
+  tags: data.tags || [],
+  faqs: data.faqs || [],
+});
+
+
+
   } catch (err) {
     console.error("JSON parse error:", err);
     res.status(500).json({ error: "Failed to generate AI data" });
