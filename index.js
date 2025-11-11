@@ -9,7 +9,7 @@ const cors = require('cors');
 
 const User = require("./models/userDetailsModel")
 const mongoose = require('mongoose');
-/* mongoose – Connects your app to a MongoDB database */
+
 const fs = require("fs");
 
 require("dotenv").config();
@@ -22,7 +22,8 @@ const app = express();
 /* Initializes an instance of an Express application */
 app.use(cors());
 /* app.use(cors()) – Allows requests from your frontend (even from different ports) */
-app.use(express.json());
+//app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 /* app.use(express.json()) – Parses JSON data in incoming requests (e.g., form data) */
 
 // Serve static files from public folder
